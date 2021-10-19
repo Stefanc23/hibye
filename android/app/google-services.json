@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "200151865680",
+    "project_id": "hibye-smart-attendance",
+    "storage_bucket": "hibye-smart-attendance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200151865680:android:1e69e5b607210253e23455",
+        "android_client_info": {
+          "package_name": "com.example.hibye"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200151865680-stsml608ono7l7tolsc5h0k90c4smqan.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.hibye",
+            "certificate_hash": "3f27d6b1103fcb035c3deaa4c2925d4c203283fc"
+          }
+        },
+        {
+          "client_id": "200151865680-cnbttde2vojl9chibadvkcsrg9lk340c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVfjz8zxhR-uydfUg6_0s--tTso7pdnz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200151865680-cnbttde2vojl9chibadvkcsrg9lk340c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

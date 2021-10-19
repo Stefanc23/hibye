@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hibye/main.dart';
-import 'package:hibye/add_organization.dart';
 import 'package:hibye/components/primary_button.dart';
 
 class RegisterOrganization extends StatefulWidget {
@@ -26,11 +24,6 @@ class _RegisterOrganization extends State<RegisterOrganization> {
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AddOrganization(),
-                  ));
             },
             child: const Icon(
               Icons.keyboard_arrow_left,
@@ -84,7 +77,6 @@ class _RegisterOrganization extends State<RegisterOrganization> {
                 ),
               ],
             ),
-
             Column(
               children: [
                 const SizedBox(

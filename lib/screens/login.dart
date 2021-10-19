@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/screens/signup.dart';
+import 'package:hibye/services/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    void _loginOnPressed() {
+      context.read<AuthenticationService>().signIn(
+            context: context,
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+    }
+
     void _signupOnPressed() {
       Navigator.pop(context);
       Navigator.push(
@@ -50,25 +61,27 @@ class Login extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: emailController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Email',
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
+                          controller: passwordController,
                           obscureText: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Password',
                           ),
@@ -79,7 +92,7 @@ class Login extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    PrimaryButton(label: 'Log in', onPressed: () {}),
+                    PrimaryButton(label: 'Log in', onPressed: _loginOnPressed),
                     Container(
                       margin: const EdgeInsets.only(bottom: 48),
                       child: Row(

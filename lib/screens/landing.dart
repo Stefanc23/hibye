@@ -12,16 +12,14 @@ class Landing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _loginOnPressed() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => Login()),
       );
     }
 
     void _signupOnPressed() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Signup()),
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => Signup()),
       );
     }
 

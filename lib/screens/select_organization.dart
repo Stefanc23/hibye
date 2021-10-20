@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hibye/models/organization.dart';
 import 'package:hibye/screens/add_organization.dart';
 import 'package:hibye/services/authentication_service.dart';
-import 'package:provider/src/provider.dart';
+import 'package:hibye/db/database.dart';
+import 'package:provider/provider.dart';
 
 class SelectOrganization extends StatefulWidget {
   static String tag = 'admin-addorg-page';
@@ -12,11 +15,21 @@ class SelectOrganization extends StatefulWidget {
 }
 
 class _SelectOrganizationState extends State<SelectOrganization> {
-  bool organizationStatus = false;
-  void setStatus() {
-    setState(() {
-      organizationStatus = !organizationStatus;
-    });
+  List<Organization> organizations = [];
+  DataBaseService db = DataBaseService();
+
+  void fetchOrganizations() async {
+    await db
+        .fetchOrganizationsByUser(context.watch<User>().uid)
+        .then((value) => setState(() {
+              organizations = value;
+            }));
+  }
+
+  @override
+  void initState() {
+    fetchOrganizations();
+    super.initState();
   }
 
   @override
@@ -32,7 +45,7 @@ class _SelectOrganizationState extends State<SelectOrganization> {
         backgroundColor: const Color(0xFF1F3C88),
         leading: GestureDetector(
           onTap: () {
-            context.read<AuthenticationService>().signOut();
+            context.read<AuthenticationService>().signOut(context);
           },
           child: const Icon(
             Icons.keyboard_arrow_left,
@@ -44,6 +57,7 @@ class _SelectOrganizationState extends State<SelectOrganization> {
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -59,53 +73,50 @@ class _SelectOrganizationState extends State<SelectOrganization> {
           )
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          Visibility(
-            child: const Text(
-              '',
-              textAlign: TextAlign.center,
-            ),
-            visible: organizationStatus,
+      body: organizations.isEmpty
+          ? Container(
+              margin: const EdgeInsets.only(top: 24),
+              width: double.infinity,
+              height: 13,
+              alignment: Alignment.center,
+              child: Text('Nothing here yet!',
+                  style: Theme.of(context).textTheme.caption),
+            )
+          : const OrganizationList(),
+    );
+  }
+}
+
+class OrganizationList extends StatelessWidget {
+  const OrganizationList({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        const SizedBox(height: 10),
+        Card(
+          child: ListTile(
+            title: const Text('Organization Name',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+            subtitle: const Text('Admin'),
+            trailing: const Icon(Icons.keyboard_arrow_right),
+            onTap: () {},
           ),
-          Visibility(
-            child: const Text(
-              'Nothing Here Yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-            ),
-            visible: organizationStatus,
+        ),
+        const SizedBox(height: 10),
+        Card(
+          child: ListTile(
+            title: const Text('Organization Name',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+            subtitle: const Text('Member'),
+            trailing: const Icon(Icons.keyboard_arrow_right),
+            onTap: () {},
           ),
-          SizedBox(height: 10),
-          Visibility(
-            child: Card(
-              child: ListTile(
-                title: const Text('Organization Name',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                subtitle: const Text('Admin'),
-                trailing: const Icon(Icons.keyboard_arrow_right),
-                onTap: () {},
-              ),
-            ),
-            visible: !organizationStatus,
-          ),
-          SizedBox(height: 10),
-          Visibility(
-            child: Card(
-              child: ListTile(
-                title: const Text('Organization Name',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-                subtitle: const Text('Member'),
-                trailing: const Icon(Icons.keyboard_arrow_right),
-                onTap: () {},
-              ),
-            ),
-            visible: !organizationStatus,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

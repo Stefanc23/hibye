@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hibye/components/primary_button.dart';
+import 'package:hibye/db/database.dart';
+import 'package:provider/provider.dart';
 
 class RegisterOrganization extends StatefulWidget {
   static String tag = 'admin-addorg-page';
@@ -10,6 +13,24 @@ class RegisterOrganization extends StatefulWidget {
 }
 
 class _RegisterOrganization extends State<RegisterOrganization> {
+  final TextEditingController organizationNameController =
+      TextEditingController();
+  final TextEditingController organizationIdController =
+      TextEditingController();
+  final TextEditingController inviteCodeController = TextEditingController();
+  final TextEditingController organizationTypeController =
+      TextEditingController();
+
+  void _submitOnPressed() {
+    DataBaseService db = DataBaseService();
+    db.registerOrganization(
+        context.watch<User>().uid,
+        organizationIdController.text,
+        organizationNameController.text,
+        inviteCodeController.text,
+        organizationTypeController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,12 +62,13 @@ class _RegisterOrganization extends State<RegisterOrganization> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 24, right: 24),
+                      padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: organizationNameController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Organization Name',
                           ),
@@ -63,12 +85,13 @@ class _RegisterOrganization extends State<RegisterOrganization> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 24, right: 24),
+                  padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Card(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: organizationIdController,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Organization ID',
                       ),
@@ -85,12 +108,13 @@ class _RegisterOrganization extends State<RegisterOrganization> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 24, right: 24),
+                      padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: inviteCodeController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Organization Invite Code',
                           ),
@@ -107,14 +131,15 @@ class _RegisterOrganization extends State<RegisterOrganization> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 24, right: 24),
+                  padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Card(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: organizationTypeController,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Organization Invite Type',
+                        labelText: 'Organization Type',
                       ),
                     ),
                   ),
@@ -126,7 +151,7 @@ class _RegisterOrganization extends State<RegisterOrganization> {
             ),
             Column(
               children: [
-                PrimaryButton(label: 'Submit', onPressed: () {}),
+                PrimaryButton(label: 'Submit', onPressed: _submitOnPressed),
               ],
             ),
           ],

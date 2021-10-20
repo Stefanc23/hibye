@@ -9,7 +9,7 @@ import 'package:hibye/screens/select_organization.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -77,6 +77,7 @@ class _MyAppState extends State<MyApp> {
           title: 'HiBye',
           theme: ThemeData(
               primarySwatch: generateMaterialColor(const Color(0xFF1F3C88)),
+              visualDensity: VisualDensity.adaptivePlatformDensity,
               fontFamily: 'Spartan',
               textTheme: const TextTheme(
                   headline1: TextStyle(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hibye/main.dart';
-import 'package:hibye/select_organization.dart';
+import 'package:hibye/screens/select_organization.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/components/secondary_button.dart';
 import 'package:hibye/components/organization_attendance_listview.dart';
@@ -52,36 +52,40 @@ class _OrganizationDashboard extends State<OrganizationDashboard> {
                   ListTile(
                     title: const Text('NAME'),
                     subtitle: const Text('Organization Name'),
-                    onTap: (){},
+                    onTap: () {},
                   ),
                   ListTile(
                     title: const Text('TYPE'),
                     subtitle: const Text('Organization Type'),
-                    onTap: (){},
+                    onTap: () {},
                   ),
                   ListTile(
                     title: const Text('ORGANIZATION ID'),
                     subtitle: const Text('Organization ID'),
-                    onTap: (){},
+                    onTap: () {},
                   ),
                   ListTile(
                     title: const Text('ORGANIZATION INVITE CODE'),
                     subtitle: const Text('Organization Name'),
-                    onTap: (){},
+                    onTap: () {},
                   ),
                   ListTile(
                     title: const Text('ADMIN NAME'),
                     subtitle: const Text('Admin Full Name'),
-                    onTap: (){},
+                    onTap: () {},
                   ),
                 ],
               ),
 
               //Ini tab ke 2
               ListView(
-                  children: const <Widget>[
-                    AttendanceTile(name: 'rizky', label: 'check in', datetime: '10-10-2001', location: 'malang')
-                  ],
+                children: const <Widget>[
+                  AttendanceTile(
+                      name: 'rizky',
+                      label: 'check in',
+                      datetime: '10-10-2001',
+                      location: 'malang')
+                ],
               ),
             ],
           ),

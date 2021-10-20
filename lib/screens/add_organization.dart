@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hibye/db/database.dart';
 import 'package:hibye/screens/register_organization.dart';
 import 'package:hibye/components/primary_button.dart';
+import 'package:hibye/screens/select_organization.dart';
+import 'package:provider/provider.dart';
 
 class AddOrganization extends StatefulWidget {
   static String tag = 'admin-addorg-page';
@@ -11,6 +15,16 @@ class AddOrganization extends StatefulWidget {
 }
 
 class _AddOrganization extends State<AddOrganization> {
+  final TextEditingController organizationIdController =
+      TextEditingController();
+  final TextEditingController inviteCodeController = TextEditingController();
+
+  void _submitOnPressed() {
+    DataBaseService db = DataBaseService();
+    db.addOrganization(context.watch<User>().uid, organizationIdController.text,
+        inviteCodeController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +39,11 @@ class _AddOrganization extends State<AddOrganization> {
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SelectOrganization(),
+                  ));
             },
             child: const Icon(
               Icons.keyboard_arrow_left,
@@ -42,12 +61,13 @@ class _AddOrganization extends State<AddOrganization> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 24, right: 24),
+                      padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: organizationIdController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Organization ID',
                           ),
@@ -64,12 +84,13 @@ class _AddOrganization extends State<AddOrganization> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 24, right: 24),
+                  padding: const EdgeInsets.only(left: 24, right: 24),
                   child: Card(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: inviteCodeController,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Organization Invite Code',
                       ),
@@ -83,7 +104,7 @@ class _AddOrganization extends State<AddOrganization> {
             ),
             Column(
               children: [
-                PrimaryButton(label: 'Submit', onPressed: () {}),
+                PrimaryButton(label: 'Submit', onPressed: _submitOnPressed),
                 Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Row(

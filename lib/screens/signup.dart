@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/screens/login.dart';
+import 'package:hibye/services/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -10,8 +12,21 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    void _signupOnPressed() {
+      context.read<AuthenticationService>().signUp(
+            context: context,
+            fullName: fullNameController.text.trim(),
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+    }
+
     void _loginOnPressed() {
       Navigator.pop(context);
       Navigator.push(
@@ -55,37 +70,40 @@ class _SignupState extends State<Signup> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: fullNameController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Full Name',
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     Padding(
-                      padding: EdgeInsets.only(left: 24, right: 24),
+                      padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: emailController,
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Email',
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
                         child: TextField(
+                          controller: passwordController,
                           obscureText: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Password',
                           ),
@@ -96,7 +114,8 @@ class _SignupState extends State<Signup> {
                 ),
                 Column(
                   children: [
-                    PrimaryButton(label: 'Sign up', onPressed: () {}),
+                    PrimaryButton(
+                        label: 'Sign up', onPressed: _signupOnPressed),
                     Container(
                       margin: const EdgeInsets.only(bottom: 48),
                       child: Row(

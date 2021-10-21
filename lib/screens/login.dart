@@ -12,15 +12,13 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     void _loginOnPressed() {
       context.read<AuthenticationService>().signIn(
-            context: context,
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
           );
     }
 
     void _signupOnPressed() {
-      Navigator.pop(context);
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Signup()),
       );

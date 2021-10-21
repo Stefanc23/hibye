@@ -20,7 +20,6 @@ class _SignupState extends State<Signup> {
   Widget build(BuildContext context) {
     void _signupOnPressed() {
       context.read<AuthenticationService>().signUp(
-            context: context,
             fullName: fullNameController.text.trim(),
             email: emailController.text.trim(),
             password: passwordController.text.trim(),
@@ -28,8 +27,7 @@ class _SignupState extends State<Signup> {
     }
 
     void _loginOnPressed() {
-      Navigator.pop(context);
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Login()),
       );

@@ -5,6 +5,7 @@ import 'package:hibye/screens/register_organization.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/screens/select_organization.dart';
 import 'package:provider/provider.dart';
+import 'package:hibye/services/authentication_service.dart';
 
 class AddOrganization extends StatefulWidget {
   static String tag = 'admin-addorg-page';
@@ -21,7 +22,9 @@ class _AddOrganization extends State<AddOrganization> {
 
   void _submitOnPressed() {
     DataBaseService db = DataBaseService();
-    db.addOrganization(context.watch<User>().uid, organizationIdController.text,
+    db.addOrganization(
+        context.read<AuthenticationService>().firebaseAuth.currentUser!.uid,
+        organizationIdController.text,
         inviteCodeController.text);
   }
 

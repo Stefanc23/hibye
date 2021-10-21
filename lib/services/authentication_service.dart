@@ -12,16 +12,15 @@ class AuthenticationService {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  FirebaseAuth get firebaseAuth => _firebaseAuth;
+
   DataBaseService db = DataBaseService();
 
   Future<String?> signIn(
-      {required BuildContext context,
-      required String email,
-      required String password}) async {
+      {required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      Navigator.of(context).pop();
       return 'Logged in';
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -29,8 +28,7 @@ class AuthenticationService {
   }
 
   Future<String?> signUp(
-      {required BuildContext context,
-      required String fullName,
+      {required String fullName,
       required String email,
       required String password}) async {
     try {
@@ -46,19 +44,13 @@ class AuthenticationService {
 
       db.createUser(newUser);
 
-      Navigator.of(context).pop();
       return 'Signed up';
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Landing()),
-    );
   }
 }

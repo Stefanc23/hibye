@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/db/database.dart';
+import 'package:hibye/services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
 class RegisterOrganization extends StatefulWidget {
@@ -24,7 +25,7 @@ class _RegisterOrganization extends State<RegisterOrganization> {
   void _submitOnPressed() {
     DataBaseService db = DataBaseService();
     db.registerOrganization(
-        context.watch<User>().uid,
+        context.read<AuthenticationService>().firebaseAuth.currentUser!.uid,
         organizationIdController.text,
         organizationNameController.text,
         inviteCodeController.text,

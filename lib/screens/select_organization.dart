@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hibye/models/organization.dart';
 import 'package:hibye/screens/add_organization.dart';
@@ -20,8 +19,15 @@ class _SelectOrganizationState extends State<SelectOrganization> {
 
   void fetchOrganizations() async {
     await db
-        .fetchOrganizationsByUser(context.watch<User>().uid)
+        .fetchOrganizationsByUser(
+            context.read<AuthenticationService>().firebaseAuth.currentUser!.uid)
         .then((value) => setState(() {
+              print(context
+                  .read<AuthenticationService>()
+                  .firebaseAuth
+                  .currentUser!
+                  .uid);
+              print(value);
               organizations = value;
             }));
   }
@@ -45,7 +51,7 @@ class _SelectOrganizationState extends State<SelectOrganization> {
         backgroundColor: const Color(0xFF1F3C88),
         leading: GestureDetector(
           onTap: () {
-            context.read<AuthenticationService>().signOut(context);
+            context.read<AuthenticationService>().signOut();
           },
           child: const Icon(
             Icons.keyboard_arrow_left,

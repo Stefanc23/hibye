@@ -32,10 +32,10 @@ class DataBaseService {
               .doc('${userId}_$organizationId')
               .set({
                 'user_id': userId,
-                'organizaton_id': organizationId,
+                'organization_id': organizationId,
                 'role': 'member'
               })
-              .then((value) => print("User Added"))
+              .then((value) => print("Junction Added"))
               .catchError((error) => print("Failed to add user: $error"));
         }
       }
@@ -47,16 +47,21 @@ class DataBaseService {
     Organization newOrganization = Organization(
         id: organizationId, name: name, inviteCode: inviteCode, type: type);
 
-    return firestore
+    return firestore.collection('organizations').doc('$organizationId').set({
+      'organization_id': organizationId,
+      'name': name,
+      'invite_code': inviteCode,
+      'type': type,
+    }).then((value) => firestore
         .collection('junction_user_organization')
         .doc('${userId}_$organizationId')
         .set({
-          'userId': userId,
-          'organizationId': organizationId,
+          'user_id': userId,
+          'organization_id': organizationId,
           'role': 'admin'
         })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .then((value) => print("Organization Registered"))
+        .catchError((error) => print("Failed to add user: $error")));
   }
 
   Future<List<Organization>> fetchOrganizationsByUser(String userId) async {
@@ -64,30 +69,34 @@ class DataBaseService {
     var roles = [];
     var i = 0;
 
-    firestore
+    await firestore
         .collection('junction_user_organization')
         .where('user_id', isEqualTo: userId)
         .get()
-        .then((value) => value.docs.forEach((doc) {
-              organizationIds.add(doc['organization_id']);
-              roles.add(doc['role']);
-            }));
+        .then((value) => (value != null)
+            ? value.docs.forEach((doc) {
+                organizationIds.add(doc['organization_id']);
+                roles.add(doc['role']);
+              })
+            : null);
 
     List<Organization> organizations = [];
 
-    firestore
-        .collection('organization')
-        .where(FieldPath.documentId, arrayContainsAny: organizationIds)
-        .get()
-        .then((value) => value.docs.forEach((doc) {
-              Organization organization = Organization(
-                  id: FieldPath.documentId.toString(),
-                  name: doc['name'],
-                  inviteCode: doc['invite_code'],
-                  type: doc['type'],
-                  role: roles[i++]);
-              organizations.add(organization);
-            }));
+    if (organizationIds.isNotEmpty) {
+      await firestore
+          .collection('organizations')
+          .where(FieldPath.documentId, whereIn: organizationIds)
+          .get()
+          .then((value) => value.docs.forEach((doc) {
+                Organization organization = Organization(
+                    id: FieldPath.documentId.toString(),
+                    name: doc['name'],
+                    inviteCode: doc['invite_code'],
+                    type: doc['type'],
+                    role: roles[i++]);
+                organizations.add(organization);
+              }));
+    }
 
     return organizations;
   }

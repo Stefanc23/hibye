@@ -39,7 +39,6 @@ class AuthenticationService {
         id: _firebaseAuth.currentUser!.uid,
         fullName: fullName,
         email: email,
-        password: password,
       );
 
       db.createUser(newUser);

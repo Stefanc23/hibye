@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hibye/db/database.dart';
 import 'package:hibye/screens/register_organization.dart';
@@ -30,6 +29,22 @@ class _AddOrganization extends State<AddOrganization> {
 
   @override
   Widget build(BuildContext context) {
+    void _back() {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SelectOrganization(),
+          ));
+    }
+
+    void _registerOnPressed() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const RegisterOrganization(),
+          ));
+    }
+
     return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -40,14 +55,7 @@ class _AddOrganization extends State<AddOrganization> {
           ),
           backgroundColor: const Color(0xFF1F3C88),
           leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SelectOrganization(),
-                  ));
-            },
+            onTap: _back,
             child: const Icon(
               Icons.keyboard_arrow_left,
               color: Colors.white,
@@ -114,14 +122,7 @@ class _AddOrganization extends State<AddOrganization> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterOrganization(),
-                                  ));
-                            },
+                            onPressed: _registerOnPressed,
                             child: Text(
                               'Register Organization',
                               style: Theme.of(context)

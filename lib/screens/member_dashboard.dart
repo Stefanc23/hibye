@@ -1,23 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:hibye/main.dart';
-import 'package:hibye/screens/select_organization.dart';
+import 'package:hibye/db/database.dart';
+import 'package:hibye/models/organization.dart';
+import 'package:hibye/models/user.dart';
 import 'package:hibye/components/primary_button.dart';
 import 'package:hibye/components/secondary_button.dart';
+import 'package:hibye/screens/member_history.dart';
+import 'package:hibye/services/authentication_service.dart';
+import 'package:provider/provider.dart';
 
 class MemberDashboard extends StatefulWidget {
   static String tag = 'MemberDashboard';
+  final Organization org;
 
-  const MemberDashboard({Key? key}) : super(key: key);
+  const MemberDashboard({Key? key, required this.org}) : super(key: key);
   @override
   _MemberDashboard createState() => _MemberDashboard();
 }
 
 class _MemberDashboard extends State<MemberDashboard> {
-  bool checkStatus = false;
+  bool hasJustCheckedIn = false;
+  late User _user;
+
+  DataBaseService db = DataBaseService();
+
+  void fetchUserData() async {
+    await db
+        .fetchUserData(
+            context.read<AuthenticationService>().firebaseAuth.currentUser!.uid)
+        .then((value) => setState(() {
+              _user = value;
+            }));
+  }
+
+  @override
+  void initState() {
+    fetchUserData();
+    super.initState();
+  }
+
   void setStatus() {
     setState(() {
-      checkStatus = !checkStatus;
+      hasJustCheckedIn = !hasJustCheckedIn;
     });
+  }
+
+  void _historyOnPressed() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MemberHistory(org: widget.org)),
+    );
   }
 
   @override
@@ -26,11 +57,10 @@ class _MemberDashboard extends State<MemberDashboard> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: const Text(
-          'Member Name',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          _user.fullName,
+          style: const TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF1F3C88),
         leading: GestureDetector(
           onTap: () {},
           child: const Icon(
@@ -46,12 +76,12 @@ class _MemberDashboard extends State<MemberDashboard> {
         Card(
           margin: const EdgeInsets.only(left: 20, right: 20),
           child: ListTile(
-            title: const Text(
-              'Organization Name',
-              style: TextStyle(color: Color(0xFF1F3C88)),
+            title: Text(
+              widget.org.name,
+              style: const TextStyle(color: Color(0xFF1F3C88)),
             ),
-            contentPadding: EdgeInsets.only(right: 20, left: 20, top: 20),
-            subtitle: const Text('Member'),
+            contentPadding: const EdgeInsets.only(right: 20, left: 20, top: 20),
+            subtitle: Text(widget.org.role),
             onTap: () {},
             isThreeLine: true,
           ),
@@ -66,45 +96,26 @@ class _MemberDashboard extends State<MemberDashboard> {
               'Check In',
               style: TextStyle(color: Color(0xFF1F3C88)),
             ),
-            contentPadding: EdgeInsets.only(right: 20, left: 20, top: 20),
+            contentPadding: const EdgeInsets.only(right: 20, left: 20, top: 20),
             subtitle: const Text('No check in yet'),
             onTap: () {},
             isThreeLine: true,
           ),
         ),
-        Visibility(
-          visible: checkStatus,
-          child: Column(
-            children: [
-              PrimaryButton(
-                  label: 'Check In',
-                  onPressed: () {
-                    print('check in');
-                  }),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-              ),
-            ],
-          ),
-        ),
-        Visibility(
-          visible: !checkStatus,
-          child: Column(
-            children: [
-              PrimaryButton(
-                  label: 'Check Out',
-                  onPressed: () {
-                    print('check out');
-                  }),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10),
-              ),
-            ],
-          ),
-        ),
+        hasJustCheckedIn
+            ? PrimaryButton(
+                label: 'Check In',
+                onPressed: () {
+                  setStatus();
+                })
+            : PrimaryButton(
+                label: 'Check Out',
+                onPressed: () {
+                  setStatus();
+                }),
         Column(
           children: [
-            SecondaryButton(label: 'History', onPressed: () {}),
+            SecondaryButton(label: 'History', onPressed: _historyOnPressed),
           ],
         ),
       ]),

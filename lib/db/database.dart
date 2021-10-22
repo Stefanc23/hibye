@@ -18,6 +18,16 @@ class DataBaseService {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
+  Future<User> fetchUserData(String userId) async {
+    return await firestore
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((value) => User(
+            id: userId, fullName: value['full_name'], email: value['email']))
+        .catchError((error) => print("Failed to fetch user data: $error"));
+  }
+
   Future<void> addOrganization(
       String userId, String organizationId, String inviteCode) async {
     firestore

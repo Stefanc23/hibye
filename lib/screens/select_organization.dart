@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hibye/models/organization.dart';
 import 'package:hibye/screens/add_organization.dart';
+import 'package:hibye/screens/member_dashboard.dart';
+import 'package:hibye/screens/organization_dashboard.dart';
 import 'package:hibye/services/authentication_service.dart';
 import 'package:hibye/db/database.dart';
 import 'package:provider/provider.dart';
@@ -22,12 +24,6 @@ class _SelectOrganizationState extends State<SelectOrganization> {
         .fetchOrganizationsByUser(
             context.read<AuthenticationService>().firebaseAuth.currentUser!.uid)
         .then((value) => setState(() {
-              print(context
-                  .read<AuthenticationService>()
-                  .firebaseAuth
-                  .currentUser!
-                  .uid);
-              print(value);
               organizations = value;
             }));
   }
@@ -36,6 +32,14 @@ class _SelectOrganizationState extends State<SelectOrganization> {
   void initState() {
     fetchOrganizations();
     super.initState();
+  }
+
+  void _addOrganizationOnPressed() {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AddOrganization(),
+        ));
   }
 
   @override
@@ -62,14 +66,7 @@ class _SelectOrganizationState extends State<SelectOrganization> {
           Padding(
             padding: const EdgeInsets.only(right: 20.0),
             child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddOrganization(),
-                    ));
-              },
+              onTap: _addOrganizationOnPressed,
               child: const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -80,49 +77,75 @@ class _SelectOrganizationState extends State<SelectOrganization> {
         ],
       ),
       body: organizations.isEmpty
-          ? Container(
-              margin: const EdgeInsets.only(top: 24),
-              width: double.infinity,
-              height: 13,
-              alignment: Alignment.center,
-              child: Text('Nothing here yet!',
-                  style: Theme.of(context).textTheme.caption),
-            )
-          : const OrganizationList(),
+          ? const EmptyList()
+          : OrganizationList(organizations: organizations),
     );
   }
 }
 
-class OrganizationList extends StatelessWidget {
-  const OrganizationList({
+class EmptyList extends StatelessWidget {
+  const EmptyList({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 24),
+      width: double.infinity,
+      height: 13,
+      alignment: Alignment.center,
+      child:
+          Text('Nothing here yet!', style: Theme.of(context).textTheme.caption),
+    );
+  }
+}
+
+class OrganizationList extends StatelessWidget {
+  List<Organization> organizations;
+
+  OrganizationList({
+    Key? key,
+    required this.organizations,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return ListView(
-      children: <Widget>[
-        const SizedBox(height: 10),
-        Card(
-          child: ListTile(
-            title: const Text('Organization Name',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-            subtitle: const Text('Admin'),
-            trailing: const Icon(Icons.keyboard_arrow_right),
-            onTap: () {},
-          ),
+      children: organizations.map((org) => OrganizationCard(org: org)).toList(),
+    );
+  }
+}
+
+class OrganizationCard extends StatelessWidget {
+  final Organization org;
+
+  const OrganizationCard({
+    Key? key,
+    required this.org,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    void _onPressed() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => org.role == 'member' ? MemberDashboard(org: org) : OrganizationDashboard(org: org)),
+      );
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 24),
+      child: Card(
+        child: ListTile(
+          title: Text(org.name,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
+          subtitle: Text(org.role),
+          trailing: const Icon(Icons.keyboard_arrow_right),
+          onTap: _onPressed,
         ),
-        const SizedBox(height: 10),
-        Card(
-          child: ListTile(
-            title: const Text('Organization Name',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0)),
-            subtitle: const Text('Member'),
-            trailing: const Icon(Icons.keyboard_arrow_right),
-            onTap: () {},
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

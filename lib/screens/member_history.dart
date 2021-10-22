@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hibye/components/history_listview.dart';
-import 'package:hibye/main.dart';
-import 'package:hibye/screens/select_organization.dart';
+import 'package:hibye/models/organization.dart';
+import 'package:hibye/screens/member_dashboard.dart';
 
 class MemberHistory extends StatefulWidget {
   static String tag = 'memberHistory';
+  final Organization org;
 
-  const MemberHistory({Key? key}) : super(key: key);
+  const MemberHistory({Key? key, required this.org}) : super(key: key);
   @override
   _MemberHistory createState() => _MemberHistory();
 }
@@ -21,6 +22,12 @@ class _MemberHistory extends State<MemberHistory> {
 
   @override
   Widget build(BuildContext context) {
+    void _back() {
+      Navigator.pop(
+        context,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -31,7 +38,7 @@ class _MemberHistory extends State<MemberHistory> {
         ),
         backgroundColor: const Color(0xFF1F3C88),
         leading: GestureDetector(
-          onTap: () {},
+          onTap: _back,
           child: const Icon(
             Icons.keyboard_arrow_left,
             color: Colors.white,

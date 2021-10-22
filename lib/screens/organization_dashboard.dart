@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hibye/main.dart';
-import 'package:hibye/screens/select_organization.dart';
-import 'package:hibye/components/primary_button.dart';
-import 'package:hibye/components/secondary_button.dart';
+import 'package:hibye/models/organization.dart';
 import 'package:hibye/components/organization_attendance_listview.dart';
 
 class OrganizationDashboard extends StatefulWidget {
   static String tag = 'OrganizationDashboard';
+  final Organization org;
 
-  const OrganizationDashboard({Key? key}) : super(key: key);
+  const OrganizationDashboard({Key? key, required this.org}) : super(key: key);
   @override
   _OrganizationDashboard createState() => _OrganizationDashboard();
 }
@@ -38,11 +36,13 @@ class _OrganizationDashboard extends State<OrganizationDashboard> {
             ),
             bottom: const TabBar(
               tabs: [
-                Tab(child: Text("PROFILE"),),
-                Tab(child: Text("ATTENDANCE")),
+                Tab(
+                  child: Text("Profile"),
+                ),
+                Tab(child: Text("Attendance")),
               ],
             ),
-            title: const Text('Organization Name'),
+            title: Text(widget.org.name),
           ),
           body: TabBarView(
             children: [
@@ -51,27 +51,22 @@ class _OrganizationDashboard extends State<OrganizationDashboard> {
                 children: <Widget>[
                   ListTile(
                     title: const Text('NAME'),
-                    subtitle: const Text('Organization Name'),
+                    subtitle: Text(widget.org.name),
                     onTap: () {},
                   ),
                   ListTile(
                     title: const Text('TYPE'),
-                    subtitle: const Text('Organization Type'),
+                    subtitle: Text(widget.org.type),
                     onTap: () {},
                   ),
                   ListTile(
                     title: const Text('ORGANIZATION ID'),
-                    subtitle: const Text('Organization ID'),
+                    subtitle: Text(widget.org.id),
                     onTap: () {},
                   ),
                   ListTile(
                     title: const Text('ORGANIZATION INVITE CODE'),
-                    subtitle: const Text('Organization Name'),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: const Text('ADMIN NAME'),
-                    subtitle: const Text('Admin Full Name'),
+                    subtitle: Text(widget.org.inviteCode),
                     onTap: () {},
                   ),
                 ],

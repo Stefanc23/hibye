@@ -72,12 +72,20 @@ class _SignupState extends State<Signup> {
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidate: true,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Full name can't be empty";
+                            }
+                            return null;
+                          },
                           controller: fullNameController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Full Name',
                           ),
+
                         ),
                       ),
                     ),
@@ -85,7 +93,16 @@ class _SignupState extends State<Signup> {
                     Padding(
                       padding: const EdgeInsets.only(left: 24, right: 24),
                       child: Card(
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidate: true,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Email can't be empty";
+                            } else if (text.isValidEmailSignUp() == false) {
+                              return 'Enter a valid email address';
+                            }
+                            return null;
+                          },
                           controller: emailController,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
@@ -98,7 +115,16 @@ class _SignupState extends State<Signup> {
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidate: true,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return "Password can't be empty";
+                            } else if(text.length < 8){
+                              return "Password must have atleast 8 character";
+                            }
+                            return null;
+                          },
                           controller: passwordController,
                           obscureText: true,
                           decoration: const InputDecoration(
@@ -115,7 +141,7 @@ class _SignupState extends State<Signup> {
                     PrimaryButton(
                         label: 'Sign up', onPressed: _signupOnPressed),
                     Container(
-                      margin: const EdgeInsets.only(bottom: 48),
+                      margin: const EdgeInsets.only(bottom: 40),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

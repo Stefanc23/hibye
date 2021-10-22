@@ -38,8 +38,8 @@ class _OrganizationDashboard extends State<OrganizationDashboard> {
             ),
             bottom: const TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.directions_car)),
-                Tab(icon: Icon(Icons.directions_transit)),
+                Tab(child: Text("PROFILE"),),
+                Tab(child: Text("ATTENDANCE")),
               ],
             ),
             title: const Text('Organization Name'),

@@ -63,12 +63,24 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidate: true,
+                          validator: (text) {
+                            if (text == null || text.isEmpty) {
+                              return null;
+                            }
+                            else if(text.isValidEmailLogin() == false){
+                              return 'Enter a valid email address';
+                            }
+                            return null;
+                          },
                           controller: emailController,
                           decoration: const InputDecoration(
+                            hintText: 'Enter a valid email address',
                             border: OutlineInputBorder(),
                             labelText: 'Email',
                           ),
+
                         ),
                       ),
                     ),
@@ -76,7 +88,17 @@ class Login extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 24, right: 24),
                       child: Card(
-                        child: TextField(
+                        child: TextFormField(
+                          autovalidate: true,
+                          validator: (text) {
+                            if (text!.length < 8 && text.isNotEmpty) {
+                              return "Password can't be under 8 characters";
+                            }
+                            else if(text.isEmpty){
+                              return null;
+                            }
+                            return null;
+                          },
                           controller: passwordController,
                           obscureText: true,
                           decoration: const InputDecoration(
